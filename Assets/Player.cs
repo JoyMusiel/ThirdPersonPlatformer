@@ -20,6 +20,10 @@ public class Player : MonoBehaviour
     void Update()
     {
         isOnGround = Physics.Raycast(transform.position, Vector3.down, 1.1f, ground);
+        Vector3 cameraForward = cameraTransform.forward;
+        cameraForward.y = 0f;
+        cameraForward.Normalize();
+        transform.forward = cameraForward;
     }
 
     private void MovePlayer(Vector2 direction)
