@@ -5,5 +5,12 @@ The player is able to move around with the WASD keys and jump (or double jump) w
 
 The 3D model asset used for the coins was made in [Blender](https://www.blender.org/download/).
 
+## Implemented Features
+- Player looks around using a third person free-look camera
+- The player's forward movement direction is determined by the camera rotation
+- Jumping (+ double jumping) to elevated platforms
+- Invisible walls prevent the player from falling out of the environment
+- Rotating coins that disappear and update the score value in the UI when collected
+
 ## Video Demo
 
