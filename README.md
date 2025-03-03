@@ -13,4 +13,4 @@ The 3D model asset used for the coins was made in [Blender](https://www.blender.
 - Rotating coins that disappear and update the score value in the UI when collected
 
 ## Video Demo
-
+https://github.com/user-attachments/assets/c116fa96-33a0-4ea5-9588-0c4e19265154
