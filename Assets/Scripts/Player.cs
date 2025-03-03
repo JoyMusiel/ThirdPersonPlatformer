@@ -17,6 +17,10 @@ public class Player : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
         inputManager.OnMove.AddListener(MovePlayer);
         inputManager.OnJumpPressed.AddListener(Jump);
     }
@@ -40,6 +44,11 @@ public class Player : MonoBehaviour
         if (moveDirection.magnitude > 0)
         {
             Vector3 velocity = moveDirection * moveSpeed;
+            if (!isGrounded)
+            {
+                velocity.x *= 0.5f;
+                velocity.z *= 0.5f;
+            }
             rb.linearVelocity = new Vector3(velocity.x, rb.linearVelocity.y, velocity.z);
         }
         rb.linearVelocity = Vector3.ClampMagnitude(rb.linearVelocity, maxVelocity);
