@@ -4,11 +4,15 @@ public class Player : MonoBehaviour
 {
     [SerializeField] private InputManager inputManager;
     [SerializeField] private Transform cameraTransform;
-    [SerializeField] private float speed;
+    [SerializeField] private float moveSpeed;
     [SerializeField] private float jumpForce;
+    [SerializeField] private float maxVelocity;
     [SerializeField] private LayerMask ground;
+    private float raycastDistance = 1f;
     private Rigidbody rb;
-    private bool isOnGround;
+    private bool isGrounded;
+    private int maxJumps = 2;
+    private int jumpCount;
 
     void Start()
     {
@@ -19,7 +23,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        isOnGround = Physics.Raycast(transform.position, Vector3.down, 1.1f, ground);
+        isGrounded = Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, raycastDistance, ground);
         Vector3 cameraForward = cameraTransform.forward;
         cameraForward.y = 0f;
         cameraForward.Normalize();
@@ -32,14 +36,23 @@ public class Player : MonoBehaviour
         moveDirection = cameraTransform.TransformDirection(moveDirection);
         moveDirection.y = 0f;
         moveDirection.Normalize();
-        rb.AddForce(speed * moveDirection);
+
+        if (moveDirection.magnitude > 0)
+        {
+            Vector3 velocity = moveDirection * moveSpeed;
+            rb.linearVelocity = new Vector3(velocity.x, rb.linearVelocity.y, velocity.z);
+        }
+        rb.linearVelocity = Vector3.ClampMagnitude(rb.linearVelocity, maxVelocity);
     }
 
     private void Jump()
     {
-        if (isOnGround)
+        if (isGrounded || jumpCount < maxJumps)
         {
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z);
             rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            jumpCount++;
+            isGrounded = false;
         }
     }
 
@@ -49,5 +62,11 @@ public class Player : MonoBehaviour
         {
             Destroy(other.gameObject);
         }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        isGrounded = true;
+        jumpCount = 0;
     }
 }
